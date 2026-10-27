@@ -1,0 +1,411 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-26T16:16:10.626Z",
+  "title": "Design System: Water Utility Data Hub",
+  "extensions": {
+    "colorMeta": {
+      "canvas": {
+        "role": "neutral",
+        "displayName": "District Canvas"
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Work Surface"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Reading Ink"
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Supporting Ink"
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Register Line"
+      },
+      "wash": {
+        "role": "neutral",
+        "displayName": "Reading Wash"
+      },
+      "primary": {
+        "role": "primary",
+        "displayName": "District Blue"
+      },
+      "primary-hover": {
+        "role": "primary",
+        "displayName": "Deep Action Blue"
+      },
+      "focus": {
+        "role": "primary",
+        "displayName": "Focus Blue"
+      },
+      "blue-band": {
+        "role": "primary",
+        "displayName": "Ink Blue"
+      },
+      "band-text": {
+        "role": "primary",
+        "displayName": "Band Reading Blue"
+      },
+      "success": {
+        "role": "semantic",
+        "displayName": "Success Green"
+      },
+      "success-bg": {
+        "role": "semantic",
+        "displayName": "Success Wash"
+      },
+      "warning": {
+        "role": "semantic",
+        "displayName": "Attention Amber"
+      },
+      "warning-bg": {
+        "role": "semantic",
+        "displayName": "Attention Wash"
+      },
+      "error": {
+        "role": "semantic",
+        "displayName": "Breach Red"
+      },
+      "error-bg": {
+        "role": "semantic",
+        "displayName": "Breach Wash"
+      },
+      "info": {
+        "role": "semantic",
+        "displayName": "Information Blue"
+      },
+      "info-bg": {
+        "role": "semantic",
+        "displayName": "Information Wash"
+      },
+      "overlay": {
+        "role": "neutral",
+        "displayName": "Modal Veil"
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "White"
+      },
+      "canvas-dark": {
+        "role": "neutral",
+        "displayName": "District Canvas — Dark"
+      },
+      "surface-dark": {
+        "role": "neutral",
+        "displayName": "Work Surface — Dark"
+      },
+      "ink-dark": {
+        "role": "neutral",
+        "displayName": "Reading Ink — Dark"
+      },
+      "muted-dark": {
+        "role": "neutral",
+        "displayName": "Supporting Ink — Dark"
+      },
+      "line-dark": {
+        "role": "neutral",
+        "displayName": "Register Line — Dark"
+      },
+      "wash-dark": {
+        "role": "neutral",
+        "displayName": "Reading Wash — Dark"
+      },
+      "primary-dark": {
+        "role": "primary",
+        "displayName": "District Blue — Dark"
+      },
+      "primary-hover-dark": {
+        "role": "primary",
+        "displayName": "Deep Action Blue — Dark"
+      },
+      "focus-dark": {
+        "role": "primary",
+        "displayName": "Focus Blue — Dark"
+      },
+      "success-dark": {
+        "role": "semantic",
+        "displayName": "Success Green — Dark"
+      },
+      "success-bg-dark": {
+        "role": "semantic",
+        "displayName": "Success Wash — Dark"
+      },
+      "warning-dark": {
+        "role": "semantic",
+        "displayName": "Attention Amber — Dark"
+      },
+      "warning-bg-dark": {
+        "role": "semantic",
+        "displayName": "Attention Wash — Dark"
+      },
+      "error-dark": {
+        "role": "semantic",
+        "displayName": "Breach Red — Dark"
+      },
+      "error-bg-dark": {
+        "role": "semantic",
+        "displayName": "Breach Wash — Dark"
+      },
+      "info-dark": {
+        "role": "semantic",
+        "displayName": "Information Blue — Dark"
+      },
+      "info-bg-dark": {
+        "role": "semantic",
+        "displayName": "Information Wash — Dark"
+      },
+      "network-panel": {
+        "role": "primary",
+        "displayName": "Network Panel Blue"
+      },
+      "network-connection": {
+        "role": "primary",
+        "displayName": "Connection Blue"
+      },
+      "network-selected": {
+        "role": "primary",
+        "displayName": "Selected DMA Blue"
+      },
+      "network-selected-border": {
+        "role": "primary",
+        "displayName": "Selected DMA Border"
+      },
+      "band-divider": {
+        "role": "primary",
+        "displayName": "Band Divider"
+      },
+      "band-label": {
+        "role": "primary",
+        "displayName": "Band Label"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Urgent breach and active-leak counts."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "First-level workspace headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Second-level work-panel headings."
+      },
+      "subheading": {
+        "displayName": "Subheading",
+        "purpose": "Ordinary third-level headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "General workspace copy."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Form labels and desktop navigation."
+      },
+      "field": {
+        "displayName": "Field",
+        "purpose": "Input and select text."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Default button label typography."
+      },
+      "supporting": {
+        "displayName": "Supporting",
+        "purpose": "Small supporting explanations."
+      },
+      "badge": {
+        "displayName": "Badge",
+        "purpose": "Compact named statuses."
+      },
+      "balance": {
+        "displayName": "Balance",
+        "purpose": "Overview water-balance summary."
+      },
+      "score": {
+        "displayName": "Score",
+        "purpose": "Data-quality score summary."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Inline code and payload editing."
+      }
+    },
+    "shadows": [
+      {
+        "name": "select-popover",
+        "value": "0 10px 30px #0b254120",
+        "purpose": "The temporary select popover."
+      },
+      {
+        "name": "dialog",
+        "value": "0 18px 70px #091f453d",
+        "purpose": "Temporary record and quality-detail dialogs."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-colors",
+        "value": "background-color 0.15s, color 0.15s, border-color 0.15s",
+        "purpose": "Links, buttons, inputs and textareas change color state."
+      },
+      {
+        "name": "skeleton-pulse",
+        "value": "pulse 1.6s ease-in-out infinite alternate",
+        "purpose": "Loading skeleton opacity moves from 0.4 to 0.85."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "0.01ms",
+        "purpose": "Reduced-motion animation/transition duration; one animation iteration and automatic scroll behavior."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide-min",
+        "value": "1600px"
+      },
+      {
+        "name": "compact-max",
+        "value": "1250px"
+      },
+      {
+        "name": "navigation-max",
+        "value": "1100px"
+      },
+      {
+        "name": "mobile-max",
+        "value": "760px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The primary button variant from the shared Button primitive.",
+      "html": "<button type=\"button\" class=\"ds-button-primary\">Run quality checks</button>",
+      "css": ".ds-button-primary{font-family:\"Segoe UI\",Calibri,Arial,sans-serif;display:inline-flex;justify-content:center;align-items:center;gap:8px;min-height:40px;padding:9px 15px;border:1px solid transparent;border-radius:7px;line-height:1.2;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer;transition:background-color .15s,color .15s,border-color .15s;background:var(--primary,#195ac5);color:var(--white,#fff);}.ds-button-primary:hover:enabled{background:var(--primary-hover,#124597);}.ds-button-primary:focus-visible{outline:3px solid var(--focus,#2d69cf);outline-offset:3px;}.ds-button-primary:disabled{opacity:.5;cursor:not-allowed;}@media(prefers-reduced-motion:reduce){.ds-button-primary{transition-duration:.01ms!important;}}:host-context(.dark) .ds-button-primary{color:#102b4d;}"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "The outline button variant from the shared Button primitive.",
+      "html": "<button type=\"button\" class=\"ds-button-outline\">Apply period</button>",
+      "css": ".ds-button-outline{font-family:\"Segoe UI\",Calibri,Arial,sans-serif;display:inline-flex;justify-content:center;align-items:center;gap:8px;min-height:40px;padding:9px 15px;border:1px solid transparent;border-radius:7px;line-height:1.2;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer;transition:background-color .15s,color .15s,border-color .15s;background:var(--surface,#fff);border-color:var(--line,#d8e2ef);color:var(--ink,#182c48);}.ds-button-outline:hover:enabled{background:var(--info-bg,#e7f0ff);border-color:var(--focus,#2d69cf);}.ds-button-outline:focus-visible{outline:3px solid var(--focus,#2d69cf);outline-offset:3px;}.ds-button-outline:disabled{opacity:.5;cursor:not-allowed;}@media(prefers-reduced-motion:reduce){.ds-button-outline{transition-duration:.01ms!important;}}"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "The ghost button variant from the shared Button primitive.",
+      "html": "<button type=\"button\" class=\"ds-button-ghost\">Cancel</button>",
+      "css": ".ds-button-ghost{font-family:\"Segoe UI\",Calibri,Arial,sans-serif;display:inline-flex;justify-content:center;align-items:center;gap:8px;min-height:40px;padding:9px 15px;border:1px solid transparent;border-radius:7px;line-height:1.2;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer;transition:background-color .15s,color .15s,border-color .15s;background:transparent;color:var(--muted,#536780);}.ds-button-ghost:hover:enabled{background:var(--wash,#f5f8fc);color:var(--primary,#195ac5);}.ds-button-ghost:focus-visible{outline:3px solid var(--focus,#2d69cf);outline-offset:3px;}.ds-button-ghost:disabled{opacity:.5;cursor:not-allowed;}@media(prefers-reduced-motion:reduce){.ds-button-ghost{transition-duration:.01ms!important;}}"
+    },
+    {
+      "name": "Destructive Button",
+      "kind": "button",
+      "refersTo": "button-destructive",
+      "description": "The destructive button variant from the shared Button primitive.",
+      "html": "<button type=\"button\" class=\"ds-button-destructive\">Destructive action</button>",
+      "css": ".ds-button-destructive{font-family:\"Segoe UI\",Calibri,Arial,sans-serif;display:inline-flex;justify-content:center;align-items:center;gap:8px;min-height:40px;padding:9px 15px;border:1px solid transparent;border-radius:7px;line-height:1.2;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer;transition:background-color .15s,color .15s,border-color .15s;background:var(--error,#a32c42);color:var(--white,#fff);}.ds-button-destructive:focus-visible{outline:3px solid var(--focus,#2d69cf);outline-offset:3px;}.ds-button-destructive:disabled{opacity:.5;cursor:not-allowed;}@media(prefers-reduced-motion:reduce){.ds-button-destructive{transition-duration:.01ms!important;}}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "The shared labeled field; compact sign-in overrides are recorded in DESIGN.md.",
+      "html": "<div class=\"ds-field\"><label for=\"ds-work-email\">Work email</label><input id=\"ds-work-email\" class=\"ds-input\" type=\"email\" autocomplete=\"username\" /></div>",
+      "css": ".ds-field{font-family:\"Segoe UI\",Calibri,Arial,sans-serif;display:flex;flex-direction:column;gap:7px;min-width:0;color:var(--ink,#182c48);}.ds-field label{font-size:13px;font-weight:600;line-height:1.55;}.ds-input{font-family:\"Segoe UI\",Calibri,Arial,sans-serif;border:1px solid var(--line,#d8e2ef);border-radius:7px;background:var(--surface,#fff);color:var(--ink,#182c48);padding:9px 12px;min-height:40px;min-width:0;width:100%;font-size:13px;line-height:1.55;caret-color:var(--primary,#195ac5);transition:background-color .15s,color .15s,border-color .15s;}.ds-input::placeholder{color:var(--muted,#536780);opacity:1;}.ds-input:focus{border-color:var(--focus,#2d69cf);}.ds-input:focus-visible{outline:3px solid var(--focus,#2d69cf);outline-offset:3px;}@media(prefers-reduced-motion:reduce){.ds-input{transition-duration:.01ms!important;}}"
+    },
+    {
+      "name": "Workspace Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Horizontal route navigation with a blue current-page lower rule.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Workspace\"><a href=\"#overview\" aria-current=\"page\">Overview</a><a href=\"#water-balance\">Water balance</a><a href=\"#operations\">Operations</a></nav>",
+      "css": ".ds-nav{font-family:\"Segoe UI\",Calibri,Arial,sans-serif;display:flex;align-items:stretch;gap:2px;height:88px;background:var(--surface,#fff);border-bottom:1px solid var(--line,#d8e2ef);}.ds-nav a{display:flex;align-items:center;padding:0 11px;font-size:13px;font-weight:600;line-height:1.55;position:relative;white-space:nowrap;color:var(--muted,#536780);text-decoration:none;transition:background-color .15s,color .15s,border-color .15s;}.ds-nav a:hover{background:var(--wash,#f5f8fc);color:var(--primary,#195ac5);}.ds-nav a[aria-current=page]{color:var(--primary,#195ac5);}.ds-nav a[aria-current=page]::after{content:'';position:absolute;bottom:0;left:11px;right:11px;height:3px;background:var(--primary,#195ac5);}.ds-nav a:focus-visible{outline:3px solid var(--focus,#2d69cf);outline-offset:3px;}@media(prefers-reduced-motion:reduce){.ds-nav a{transition-duration:.01ms!important;}}"
+    },
+    {
+      "name": "Status Badges",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Sentence-case named states with semantic foregrounds and pale fills.",
+      "html": "<div class=\"ds-statuses\"><span class=\"ds-badge\">Neutral</span><span class=\"ds-badge ds-badge-success\">Resolved</span><span class=\"ds-badge ds-badge-warning\">Open</span><span class=\"ds-badge ds-badge-error\">Failed</span><span class=\"ds-badge ds-badge-info\">In progress</span></div>",
+      "css": ".ds-statuses{display:flex;gap:8px;flex-wrap:wrap;}.ds-badge{font-family:\"Segoe UI\",Calibri,Arial,sans-serif;display:inline-flex;align-items:center;gap:5px;min-height:23px;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:650;line-height:1.4;white-space:nowrap;background:var(--wash,#f5f8fc);color:var(--muted,#536780);}.ds-badge-success{color:var(--success,#176346);background:var(--success-bg,#e7f5ee);}.ds-badge-warning{color:var(--warning,#865000);background:var(--warning-bg,#fff2d6);}.ds-badge-error{color:var(--error,#a32c42);background:var(--error-bg,#ffedf0);}.ds-badge-info{color:var(--info,#174e91);background:var(--info-bg,#e7f0ff);}"
+    },
+    {
+      "name": "Work Panel",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "A flat surface with a divided title area and summary-body inset.",
+      "html": "<section class=\"ds-card\"><header class=\"ds-card-header\"><div><h2>Water balance</h2><p>Last complete billing period</p></div></header><div class=\"ds-card-body\"><p>Simplified input-minus-billed balance. Internal transfers are excluded.</p></div></section>",
+      "css": ".ds-card{font-family:\"Segoe UI\",Calibri,Arial,sans-serif;background:var(--surface,#fff);color:var(--ink,#182c48);border:1px solid var(--line,#d8e2ef);border-radius:12px;overflow:hidden;min-width:0;}.ds-card-header{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:22px 24px;border-bottom:1px solid var(--line,#d8e2ef);min-width:0;}.ds-card-header h2{font-family:\"Water Barlow\",\"Segoe UI\",sans-serif;font-weight:600;line-height:1.2;font-size:18px;letter-spacing:-.012em;margin:0;}.ds-card-header p{font-size:12px;margin:6px 0 0;color:var(--muted,#536780);line-height:1.55;}.ds-card-body{padding:22px 24px;}.ds-card-body p{font-size:12px;line-height:1.55;color:var(--muted,#536780);margin:0;}"
+    },
+    {
+      "name": "DMA Network",
+      "kind": "custom",
+      "refersTo": "network-node",
+      "description": "The fixed-blue connection schematic; sample labels stand in for runtime DMA names and counts.",
+      "html": "<section class=\"ds-network\"><h2>District network</h2><div class=\"ds-network-diagram\" aria-label=\"District metered area network; schematic, not geographic\"><svg viewBox=\"0 0 100 100\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><path d=\"M20 25 L75 22 L44 65 L85 80 M20 25 L44 65\" fill=\"none\" stroke=\"currentColor\" stroke-width=\".7\" /></svg><button type=\"button\" class=\"ds-network-node ds-node-first\" aria-pressed=\"false\"><span class=\"ds-node-dot ds-node-alert\"></span><strong>DMA name</strong><span>Water-quality breaches</span></button><button type=\"button\" class=\"ds-network-node ds-node-second\" aria-pressed=\"true\"><span class=\"ds-node-dot ds-node-warning\"></span><strong>DMA name</strong><span>Active leaks</span></button><button type=\"button\" class=\"ds-network-node ds-node-third\" aria-pressed=\"false\"><span class=\"ds-node-dot\"></span><strong>DMA name</strong><span>NRW</span></button><span class=\"ds-diagram-caption\">Schematic DMA connections</span></div></section>",
+      "css": ".ds-network{font-family:\"Segoe UI\",Calibri,Arial,sans-serif;background:#0d3261;color:#fff;border-radius:12px;padding:25px 30px;}.ds-network h2{font-family:\"Water Barlow\",\"Segoe UI\",sans-serif;font-weight:600;line-height:1.2;font-size:15px;color:#e2eeff;margin:0;}.ds-network-diagram{height:252px;width:100%;position:relative;color:#507aaa;}.ds-network-diagram svg{position:absolute;inset:20px 22px 22px;width:calc(100% - 44px);height:calc(100% - 44px);}.ds-network-node{font-family:\"Segoe UI\",Calibri,Arial,sans-serif;position:absolute;transform:translate(-50%,-35%);display:flex;align-items:center;flex-direction:column;gap:3px;padding:6px 8px;background:#0d3261;color:#eef5ff;border:1px solid transparent;border-radius:7px;text-align:center;min-width:90px;max-width:140px;font-size:11px;line-height:1.4;cursor:pointer;transition:background-color .15s,color .15s,border-color .15s;}.ds-node-first{left:20%;top:25%;}.ds-node-second{left:75%;top:22%;}.ds-node-third{left:44%;top:65%;}.ds-network-node strong{font-size:12px;font-weight:600;}.ds-network-node>span:last-child{color:#c1d7f4;font-size:10px;}.ds-network-node:hover,.ds-network-node[aria-pressed=true]{background:#204d86;border-color:#729dd2;}.ds-network-node:focus-visible{outline:3px solid var(--focus,#2d69cf);outline-offset:3px;}.ds-node-dot{width:12px;height:12px;border:3px solid #9cc3fc;background:#d8eaff;border-radius:50%;margin-bottom:3px;}.ds-node-alert{background:#f8c3cf;border-color:#e17d94;}.ds-node-warning{background:#ffe0a5;border-color:#d9a14b;}.ds-diagram-caption{position:absolute;left:0;bottom:0;font-size:10px;color:#b5cce8;}@media(prefers-reduced-motion:reduce){.ds-network-node{transition-duration:.01ms!important;}}"
+    },
+    {
+      "name": "Quality Finding Detail",
+      "kind": "custom",
+      "refersTo": "dialog",
+      "description": "Readable content of the wide quality dialog; Radix supplies app positioning and focus management.",
+      "html": "<article class=\"ds-quality-detail\"><h2>Configured thresholds</h2><dl class=\"ds-threshold-list\"><div><dt>Future timestamp tolerance (minutes)</dt><dd>Administrator-managed setting</dd></div></dl><section class=\"ds-rule-section\"><h3>Affected record samples</h3><p>Up to five records from this quality snapshot. Correct the source data and run the checks again to verify improvement.</p><div class=\"ds-table-scroll\"><table><thead><tr><th>Record</th><th>Finding</th><th>Observed values</th></tr></thead><tbody><tr><td><a class=\"ds-table-link\" href=\"#record\">View affected record</a></td><td>Finding</td><td><dl class=\"ds-sample-values\"><div><dt>Observed values</dt><dd>Open the canonical record for its current values.</dd></div></dl></td></tr></tbody></table></div></section></article>",
+      "css": ".ds-quality-detail{font-family:\"Segoe UI\",Calibri,Arial,sans-serif;max-width:920px;background:var(--surface,#fff);border-radius:14px;padding:28px;color:var(--ink,#182c48);box-shadow:0 18px 70px #091f453d;}.ds-quality-detail h2{font-family:\"Water Barlow\",\"Segoe UI\",sans-serif;font-weight:600;line-height:1.2;font-size:16px;margin:0 0 10px;}.ds-threshold-list{margin:0;}.ds-threshold-list>div{display:flex;justify-content:space-between;gap:20px;padding:10px 0;border-top:1px solid var(--line,#d8e2ef);}.ds-threshold-list dt,.ds-sample-values dt{font-size:11px;color:var(--muted,#536780);}.ds-threshold-list dd{font-size:13px;font-weight:600;margin:0;}.ds-rule-section{margin-top:27px;}.ds-rule-section h3{font-family:\"Water Barlow\",\"Segoe UI\",sans-serif;font-weight:600;line-height:1.2;font-size:16px;margin:0 0 10px;}.ds-rule-section>p{font-size:12px;line-height:1.8;margin:0 0 17px;color:var(--muted,#536780);}.ds-table-scroll{width:100%;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;}.ds-table-scroll table{width:100%;border-collapse:collapse;font-size:13px;line-height:1.55;text-align:left;min-width:680px;}.ds-table-scroll th{background:var(--wash,#f5f8fc);padding:13px 19px;color:var(--muted,#536780);font-size:11px;letter-spacing:.025em;font-weight:650;white-space:nowrap;}.ds-table-scroll td{padding:17px 19px;border-top:1px solid var(--line,#d8e2ef);vertical-align:middle;max-width:360px;overflow-wrap:anywhere;}.ds-table-scroll tbody tr:hover{background:var(--wash,#f5f8fc);}.ds-table-link{display:inline-flex;align-items:center;gap:6px;color:var(--primary,#195ac5);font-weight:600;font-size:inherit;text-decoration:none;transition:background-color .15s,color .15s,border-color .15s;}.ds-table-link:hover{text-decoration:underline;text-underline-offset:4px;}.ds-table-link:focus-visible{outline:3px solid var(--focus,#2d69cf);outline-offset:3px;}.ds-sample-values{margin:0;min-width:150px;}.ds-sample-values>div{padding:4px 0;}.ds-sample-values dd{margin:2px 0 0;font-size:12px;}@media(prefers-reduced-motion:reduce){.ds-table-link{transition-duration:.01ms!important;}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Network Atlas",
+    "overview": "The Network Atlas gives water-district work a measured, legible identity: cool reading surfaces, blue actions, an ink-blue operational band and a connection schematic. Water Barlow supplies the headings and large readings; familiar body text keeps forms and records compact.\n\nThe system uses flat bordered panels, explicit status words and direct record links. Contrast comes from tone, scale and alignment. The approved John world is separate from the parent Waste Hub: its navigation runs across the top and its sign-in is a centered district panel.",
+    "keyCharacteristics": [
+      "Ink-blue operational surfaces with a reusable DMA schematic.",
+      "Blue actions and current states; named semantic statuses.",
+      "Water Barlow headings and measured numerals over compact system body text.",
+      "Flat bordered panels, aligned tables and explicit refresh controls."
+    ],
+    "rules": [
+      {
+        "name": "The Status Words Rule",
+        "body": "Pair semantic color with a visible status or finding. Color is never the only explanation.",
+        "section": "colors"
+      },
+      {
+        "name": "The Measured Reading Rule",
+        "body": "Keep quantities with their units, labels and period context. Preserve tabular numerals where the implementation uses them for aligned comparisons.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Panels Rule",
+        "body": "Keep work panels flat. Reserve the existing soft shadows for select popovers and dialogs.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use the existing semantic colors with visible status words and readable findings.",
+      "Do keep Water Barlow for headings and measured display readings, with the established system stack for forms and tables.",
+      "Do preserve horizontal workspace navigation and its responsive navigation sheet.",
+      "Do retain labels, units, period context, source-record links and visible event dates.",
+      "Do use explicit refresh controls and actionable loading, empty and error states.",
+      "Do keep the schematic identified as schematic, with accessible names and selected-state semantics."
+    ],
+    "donts": [
+      "Don't import the parent's sidebar-led workspace or split-screen sign-in into this approved John world.",
+      "Don't substitute serialized JSON for quality thresholds, findings or observed-value labels.",
+      "Don't use semantic status colors as arbitrary decoration or rely on color alone.",
+      "Don't add decorative shadows to the flat panel vocabulary.",
+      "Don't add polling, focus/reconnect refresh or automatic error-retry loops."
+    ]
+  }
+}
+

@@ -1,0 +1,740 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Classification {
+  PUBLIC
+  INTERNAL
+  CONFIDENTIAL
+  RESTRICTED
+}
+
+enum RunStatus {
+  RUNNING
+  SUCCEEDED
+  PARTIAL
+  FAILED
+}
+
+enum Severity {
+  INFO
+  WARNING
+  ERROR
+}
+
+enum Remediation {
+  OPEN
+  ACKNOWLEDGED
+  RESOLVED
+}
+
+model Organization {
+  id        String         @id @default(uuid())
+  name      String
+  timezone  String         @default("Asia/Manila")
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  users     User[]
+  roles     Role[]
+  sources   SourceSystem[]
+  domains   DataDomain[]
+}
+
+model User {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  email          String       @unique
+  name           String
+  passwordHash   String
+  roleId         String
+  role           Role         @relation(fields: [roleId], references: [id])
+  active         Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  sessions       Session[]
+  recoveryTokens PasswordRecovery[]
+  securityQuestion SecurityQuestion?
+
+  @@index([organizationId])
+}
+
+model Role {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  code           String
+  name           String
+  permissions    Permission[]
+  users          User[]
+
+  @@unique([organizationId, code])
+}
+
+model Permission {
+  id     String @id @default(uuid())
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id])
+  code   String
+
+  @@unique([roleId, code])
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([expiresAt])
+}
+
+model PasswordRecovery {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model SecurityQuestion {
+  userId     String   @id
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question   String
+  answerHash String
+  updatedAt  DateTime @updatedAt
+}
+model DataDomain {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  code           String
+  name           String
+  description    String
+  owner          String
+  steward        String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  assets         DataAsset[]
+
+  @@unique([organizationId, code])
+}
+
+model DataAsset {
+  id             String         @id @default(uuid())
+  organizationId String
+  domainId       String
+  domain         DataDomain     @relation(fields: [domainId], references: [id])
+  sourceSystemId String
+  sourceSystem   SourceSystem   @relation(fields: [sourceSystemId], references: [id])
+  name           String
+  entity         String
+  owner          String
+  steward        String
+  classification Classification
+  containsPii    Boolean        @default(false)
+  retentionDays  Int
+  policy         String
+  version        Int            @default(1)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@unique([organizationId, sourceSystemId, entity])
+  @@index([organizationId, domainId])
+}
+
+model SourceSystem {
+  id             String                  @id @default(uuid())
+  organizationId String
+  organization   Organization            @relation(fields: [organizationId], references: [id])
+  code           String
+  name           String
+  entity         String
+  domain         String
+  method         String
+  freshnessHours Int                     @default(24)
+  lastSuccessAt  DateTime?
+  cursor         String?
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+  connections    IntegrationConnection[]
+  runs           IntegrationRun[]
+  assets         DataAsset[]
+
+  @@unique([organizationId, code])
+  @@index([organizationId, lastSuccessAt])
+}
+
+model IntegrationConnection {
+  id             String       @id @default(uuid())
+  organizationId String
+  sourceSystemId String
+  sourceSystem   SourceSystem @relation(fields: [sourceSystemId], references: [id])
+  adapter        String
+  enabled        Boolean      @default(true)
+  cursor         String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([sourceSystemId, adapter])
+}
+
+model IntegrationRun {
+  id             String                   @id @default(uuid())
+  organizationId String
+  sourceSystemId String
+  sourceSystem   SourceSystem             @relation(fields: [sourceSystemId], references: [id])
+  idempotencyKey String
+  payloadHash    String
+  method         String
+  entity         String
+  status         RunStatus                @default(RUNNING)
+  startedAt      DateTime                 @default(now())
+  finishedAt     DateTime?
+  totalRecords   Int                      @default(0)
+  processed      Int                      @default(0)
+  failed         Int                      @default(0)
+  skipped        Int                      @default(0)
+  initiatedBy    String
+  records        RawImportRecord[]
+  errors         IntegrationRecordError[]
+
+  @@unique([organizationId, sourceSystemId, idempotencyKey])
+  @@index([organizationId, startedAt])
+}
+
+model IntegrationLock {
+  sourceSystemId String   @id
+  organizationId String
+  expiresAt      DateTime
+}
+
+model RawImportRecord {
+  id             String                   @id @default(uuid())
+  organizationId String
+  runId          String
+  run            IntegrationRun           @relation(fields: [runId], references: [id])
+  rowNumber      Int
+  sourceRecordId String?
+  payload        Json
+  payloadHash    String
+  status         String
+  canonicalId    String?
+  createdAt      DateTime                 @default(now())
+  errors         IntegrationRecordError[]
+
+  @@unique([runId, rowNumber])
+  @@index([organizationId, sourceRecordId])
+}
+
+model IntegrationRecordError {
+  id             String          @id @default(uuid())
+  organizationId String
+  runId          String
+  run            IntegrationRun  @relation(fields: [runId], references: [id])
+  rawRecordId    String
+  rawRecord      RawImportRecord @relation(fields: [rawRecordId], references: [id])
+  code           String
+  message        String
+  remediation    Remediation     @default(OPEN)
+  attempts       Int             @default(0)
+  createdAt      DateTime        @default(now())
+  resolvedAt     DateTime?
+
+  @@index([organizationId, remediation])
+}
+
+model DQRule {
+  id             String     @id @default(uuid())
+  organizationId String
+  code           String
+  name           String
+  domain         String
+  entity         String
+  severity       Severity
+  description    String
+  checkId        String
+  active         Boolean    @default(true)
+  config         Json
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  results        DQResult[]
+
+  @@unique([organizationId, code])
+}
+
+model DQRun {
+  id             String     @id @default(uuid())
+  organizationId String
+  startedAt      DateTime   @default(now())
+  finishedAt     DateTime?
+  status         RunStatus  @default(RUNNING)
+  score          Float      @default(0)
+  checked        Int        @default(0)
+  failed         Int        @default(0)
+  initiatedBy    String
+  results        DQResult[]
+
+  @@index([organizationId, startedAt])
+}
+
+model DQResult {
+  id              String      @id @default(uuid())
+  organizationId  String
+  runId           String
+  run             DQRun       @relation(fields: [runId], references: [id])
+  ruleId          String
+  rule            DQRule      @relation(fields: [ruleId], references: [id])
+  severity        Severity
+  checked         Int
+  failed          Int
+  passed          Boolean
+  samples         Json
+  remediation     Remediation @default(OPEN)
+  remediationNote String?
+  updatedAt       DateTime    @updatedAt
+
+  @@unique([runId, ruleId])
+  @@index([organizationId, remediation])
+}
+
+model AuditEvent {
+  id             String   @id @default(uuid())
+  organizationId String
+  actorId        String?
+  actorName      String
+  action         String
+  entity         String
+  entityId       String?
+  requestId      String
+  reason         String?
+  metadata       Json
+  createdAt      DateTime @default(now())
+
+  @@index([organizationId, createdAt])
+  @@index([organizationId, action])
+}
+
+enum ReadType {
+  ACTUAL
+  ESTIMATED
+}
+
+enum WorkStatus {
+  OPEN
+  DISPATCHED
+  IN_PROGRESS
+  COMPLETED
+  CLOSED
+}
+
+enum ComplaintStatus {
+  OPEN
+  ASSIGNED
+  RESOLVED
+  CLOSED
+}
+
+enum MeterStatus {
+  ACTIVE
+  INACTIVE
+  REPLACED
+}
+
+enum FacilityType {
+  TREATMENT_PLANT
+  PUMP_STATION
+  RESERVOIR
+}
+
+model DistrictMeteredArea {
+  id             String   @id @default(uuid())
+  organizationId String
+  code           String
+  name           String
+  connections    Int
+  diagramX       Float
+  diagramY       Float
+  city           String   @default("")
+  barangay       String   @default("")
+  barangayPsgc   String   @default("")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([organizationId, code])
+  @@unique([organizationId, id])
+}
+
+model Tariff {
+  id             String    @id @default(uuid())
+  organizationId String
+  code           String
+  name           String
+  ratePerM3      Decimal   @db.Decimal(12, 4)
+  customerClass  String    @default("RESIDENTIAL")
+  meterSizeMm    Int       @default(15)
+  currency       String    @default("PHP")
+  effectiveFrom  DateTime  @default(dbgenerated("'2026-01-01 00:00:00'::timestamp"))
+  effectiveTo    DateTime?
+  baseVolumeM3   Decimal   @default(0) @db.Decimal(12, 3)
+  baseCharge     Decimal   @default(0) @db.Decimal(12, 2)
+  blocks         Json      @default("[]")
+  sourceLabel    String    @default("Illustrative tariff; not an MCWD rate")
+  demoOnly       Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([organizationId, code])
+  @@unique([organizationId, id])
+}
+
+model CustomerAccount {
+  id              String    @id @default(uuid())
+  organizationId  String
+  sourceSystemId  String
+  sourceRecordId  String
+  sourceUpdatedAt DateTime
+  sourceVersion   String
+  accountNumber   String
+  customerName    String
+  address         String
+  city            String    @default("")
+  barangay        String    @default("")
+  tariffId        String
+  active          Boolean   @default(true)
+  archivedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([organizationId, sourceSystemId, sourceRecordId])
+  @@unique([organizationId, accountNumber])
+  @@unique([organizationId, id])
+}
+
+model ServiceConnection {
+  id              String    @id @default(uuid())
+  organizationId  String
+  sourceSystemId  String
+  sourceRecordId  String
+  sourceUpdatedAt DateTime
+  sourceVersion   String
+  code            String
+  accountId       String
+  dmaId           String
+  status          String
+  installedAt     DateTime
+  archivedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([organizationId, sourceSystemId, sourceRecordId])
+  @@unique([organizationId, code])
+  @@unique([organizationId, id])
+  @@index([organizationId, dmaId])
+}
+
+model Meter {
+  id              String      @id @default(uuid())
+  organizationId  String
+  sourceSystemId  String
+  sourceRecordId  String
+  sourceUpdatedAt DateTime
+  sourceVersion   String
+  serialNumber    String
+  connectionId    String
+  status          MeterStatus
+  installedAt     DateTime
+  replacedAt      DateTime?
+  archivedAt      DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@unique([organizationId, sourceSystemId, sourceRecordId])
+  @@unique([organizationId, serialNumber])
+  @@unique([organizationId, id])
+  @@index([organizationId, connectionId])
+}
+
+model MeterReading {
+  id                  String    @id @default(uuid())
+  organizationId      String
+  sourceSystemId      String
+  sourceRecordId      String
+  sourceUpdatedAt     DateTime
+  sourceVersion       String
+  meterId             String
+  connectionId        String
+  previousM3          Decimal   @db.Decimal(16, 3)
+  currentM3           Decimal   @db.Decimal(16, 3)
+  consumptionM3       Decimal   @db.Decimal(16, 3)
+  readType            ReadType
+  occurredAt          DateTime
+  periodStart         DateTime
+  periodEnd           DateTime
+  replacementRecorded Boolean   @default(false)
+  archivedAt          DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@unique([organizationId, sourceSystemId, sourceRecordId])
+  @@unique([organizationId, meterId, periodStart, periodEnd])
+  @@unique([organizationId, id])
+  @@index([organizationId, occurredAt])
+}
+
+model BillingRecord {
+  id              String    @id @default(uuid())
+  organizationId  String
+  sourceSystemId  String
+  sourceRecordId  String
+  sourceUpdatedAt DateTime
+  sourceVersion   String
+  reference       String
+  accountId       String
+  connectionId    String
+  meterReadingId  String
+  dmaId           String
+  tariffId        String
+  billedM3        Decimal   @db.Decimal(16, 3)
+  amount          Decimal   @db.Decimal(16, 2)
+  periodStart     DateTime
+  periodEnd       DateTime
+  paymentStatus   String
+  archivedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([organizationId, sourceSystemId, sourceRecordId])
+  @@unique([organizationId, reference])
+  @@unique([organizationId, meterReadingId])
+  @@unique([organizationId, id])
+  @@index([organizationId, dmaId, periodStart, periodEnd])
+}
+
+model Facility {
+  id              String       @id @default(uuid())
+  organizationId  String
+  sourceSystemId  String
+  sourceRecordId  String
+  sourceUpdatedAt DateTime
+  sourceVersion   String
+  code            String
+  name            String
+  dmaId           String
+  type            FacilityType
+  capacityM3Day   Decimal      @db.Decimal(16, 3)
+  archivedAt      DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@unique([organizationId, sourceSystemId, sourceRecordId])
+  @@unique([organizationId, code])
+  @@unique([organizationId, id])
+}
+
+model ProductionReading {
+  id              String    @id @default(uuid())
+  organizationId  String
+  sourceSystemId  String
+  sourceRecordId  String
+  sourceUpdatedAt DateTime
+  sourceVersion   String
+  facilityId      String
+  dmaId           String
+  volumeM3        Decimal   @db.Decimal(16, 3)
+  flowLs          Float
+  pressureBar     Float
+  periodStart     DateTime
+  periodEnd       DateTime
+  occurredAt      DateTime
+  isSystemInput   Boolean   @default(false)
+  archivedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([organizationId, sourceSystemId, sourceRecordId])
+  @@unique([organizationId, facilityId, periodStart, periodEnd])
+  @@unique([organizationId, id])
+  @@index([organizationId, dmaId, periodStart, periodEnd])
+}
+
+model PipelineAsset {
+  id              String    @id @default(uuid())
+  organizationId  String
+  sourceSystemId  String
+  sourceRecordId  String
+  sourceUpdatedAt DateTime
+  sourceVersion   String
+  code            String
+  dmaId           String
+  material        String
+  diameterMm      Float
+  lengthM         Float
+  installedAt     DateTime
+  archivedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([organizationId, sourceSystemId, sourceRecordId])
+  @@unique([organizationId, code])
+  @@unique([organizationId, id])
+}
+
+model SamplingPoint {
+  id              String    @id @default(uuid())
+  organizationId  String
+  sourceSystemId  String
+  sourceRecordId  String
+  sourceUpdatedAt DateTime
+  sourceVersion   String
+  code            String
+  name            String
+  dmaId           String
+  archivedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([organizationId, sourceSystemId, sourceRecordId])
+  @@unique([organizationId, code])
+  @@unique([organizationId, id])
+}
+
+model WaterQualityParameter {
+  id                      String   @id @default(uuid())
+  organizationId          String
+  code                    String
+  name                    String
+  unit                    String
+  plausibleMin            Float
+  plausibleMax            Float
+  limitMin                Float
+  limitMax                Float
+  guidance                String
+  standardCode            String   @default("DEMO-UNREVIEWED")
+  standardUrl             String   @default("")
+  referenceSection        String   @default("")
+  method                  String   @default("")
+  monitoringIntervalHours Int      @default(24)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@unique([organizationId, code])
+  @@unique([organizationId, id])
+}
+
+model WaterQualityResult {
+  id                 String    @id @default(uuid())
+  organizationId     String
+  sourceSystemId     String
+  sourceRecordId     String
+  sourceUpdatedAt    DateTime
+  sourceVersion      String
+  sampleReference    String
+  samplingPointId    String
+  parameterId        String
+  value              Float
+  unit               String
+  sampledAt          DateTime
+  enteredBy          String
+  correctiveActionId String?
+  correctionVersion  Int       @default(1)
+  archivedAt         DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@unique([organizationId, sourceSystemId, sourceRecordId])
+  @@unique([organizationId, sampleReference, parameterId])
+  @@unique([organizationId, id])
+  @@index([organizationId, sampledAt])
+}
+
+model WorkOrder {
+  id              String     @id @default(uuid())
+  organizationId  String
+  sourceSystemId  String
+  sourceRecordId  String
+  sourceUpdatedAt DateTime
+  sourceVersion   String
+  reference       String
+  title           String
+  dmaId           String
+  category        String
+  priority        Severity
+  status          WorkStatus
+  previousStatus  String?
+  assignee        String
+  reportedAt      DateTime
+  dispatchedAt    DateTime?
+  completedAt     DateTime?
+  archivedAt      DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@unique([organizationId, sourceSystemId, sourceRecordId])
+  @@unique([organizationId, reference])
+  @@unique([organizationId, id])
+  @@index([organizationId, status])
+}
+
+model LeakReport {
+  id                 String    @id @default(uuid())
+  organizationId     String
+  sourceSystemId     String
+  sourceRecordId     String
+  sourceUpdatedAt    DateTime
+  sourceVersion      String
+  reference          String
+  dmaId              String
+  pipelineId         String
+  workOrderId        String?
+  location           String
+  estimatedLossM3Day Float
+  reportedAt         DateTime
+  resolvedAt         DateTime?
+  archivedAt         DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@unique([organizationId, sourceSystemId, sourceRecordId])
+  @@unique([organizationId, reference])
+  @@unique([organizationId, id])
+}
+
+model CustomerComplaint {
+  id              String          @id @default(uuid())
+  organizationId  String
+  sourceSystemId  String
+  sourceRecordId  String
+  sourceUpdatedAt DateTime
+  sourceVersion   String
+  reference       String
+  accountId       String
+  dmaId           String
+  category        String
+  customerAlias   String
+  status          ComplaintStatus
+  previousStatus  String?
+  reportedAt      DateTime
+  resolvedAt      DateTime?
+  archivedAt      DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@unique([organizationId, sourceSystemId, sourceRecordId])
+  @@unique([organizationId, reference])
+  @@unique([organizationId, id])
+  @@index([organizationId, status])
+}

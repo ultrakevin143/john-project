@@ -1,0 +1,3 @@
+sourceRecordId,sourceUpdatedAt,reference,title,dmaId,category,priority,status,assignee,reportedAt
+PRESENTATION-WO-001,2026-10-26T10:00:00Z,PRESENTATION-WO-001,Inspect a synthetic leak,6e3c2c44-0a87-40c8-a217-c5d8727b5c71,LEAK_REPAIR,WARNING,OPEN,Demo crew,2026-10-26T09:00:00Z
+PRESENTATION-WO-002,2026-10-26T10:00:00Z,PRESENTATION-WO-002,Inspect a second synthetic leak,6e3c2c44-0a87-40c8-a217-c5d8727b5c71,INVALID_CATEGORY,WARNING,OPEN,Demo crew,2026-10-26T09:00:00Z

@@ -1,0 +1,19 @@
+name: john-water-hub
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: water_hub
+      POSTGRES_USER: water
+      POSTGRES_PASSWORD: ${LOCAL_DB_PASSWORD:?Run npm run setup:local first}
+    ports:
+      - "127.0.0.1:54339:5432"
+    volumes:
+      - water_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U water -d water_hub"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+volumes:
+  water_postgres:

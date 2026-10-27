@@ -1,0 +1,165 @@
+"use client";
+
+import { type Definition } from "@/features/operations/operations.screen";
+
+export const operationDefinitions: Record<string, Definition> = {
+  "water-quality": {
+    title: "Water-quality results",
+    domain: "quality",
+    columns: [
+      ["sampleReference", "Sample"],
+      ["samplingPointId", "Sampling point"],
+      ["parameterId", "Parameter"],
+      ["value", "Result"],
+      ["unit", "Unit"],
+      ["sampledAt", "Sampled (PHT)"],
+      ["enteredBy", "Entered by"],
+    ],
+  },
+  "work-orders": {
+    title: "Work orders",
+    domain: "field",
+    columns: [
+      ["reference", "Work order"],
+      ["title", "Task"],
+      ["dmaId", "DMA"],
+      ["priority", "Priority"],
+      ["status", "Status"],
+      ["assignee", "Crew / assignee"],
+      ["reportedAt", "Reported (PHT)"],
+    ],
+    status: ["OPEN", "DISPATCHED", "IN_PROGRESS", "COMPLETED", "CLOSED"],
+  },
+  leaks: {
+    title: "Leak reports",
+    domain: "field",
+    columns: [
+      ["reference", "Report"],
+      ["location", "Location"],
+      ["dmaId", "DMA"],
+      ["estimatedLossM3Day", "Est. loss m³/day"],
+      ["reportedAt", "Reported (PHT)"],
+      ["resolvedAt", "Resolved (PHT)"],
+    ],
+  },
+  meters: {
+    title: "Meters",
+    domain: "metering",
+    columns: [
+      ["serialNumber", "Meter serial"],
+      ["connectionId", "Service connection"],
+      ["status", "Status"],
+      ["installedAt", "Installed (PHT)"],
+    ],
+    status: ["ACTIVE", "INACTIVE", "REPLACED"],
+  },
+  "meter-readings": {
+    title: "Meter readings",
+    domain: "metering",
+    columns: [
+      ["sourceRecordId", "Reading"],
+      ["meterId", "Meter"],
+      ["previousM3", "Previous m³"],
+      ["currentM3", "Current m³"],
+      ["consumptionM3", "Consumption m³"],
+      ["readType", "Read type"],
+      ["periodStart", "Period start"],
+    ],
+  },
+  accounts: {
+    title: "Customer accounts",
+    domain: "billing",
+    columns: [
+      ["accountNumber", "Account"],
+      ["customerName", "Customer"],
+      ["address", "Address"],
+      ["city", "City"],
+      ["barangay", "Barangay"],
+      ["tariffId", "Tariff"],
+      ["active", "Active"],
+    ],
+  },
+  "service-connections": {
+    title: "Service connections",
+    domain: "metering",
+    columns: [
+      ["code", "Connection"],
+      ["dmaId", "DMA"],
+      ["status", "Status"],
+      ["installedAt", "Installed (PHT)"],
+    ],
+    status: ["ACTIVE", "INACTIVE"],
+  },
+  billing: {
+    title: "Billing records",
+    domain: "billing",
+    columns: [
+      ["reference", "Billing reference"],
+      ["dmaId", "DMA"],
+      ["billedM3", "Billed m³"],
+      ["amount", "Amount PHP"],
+      ["periodStart", "Period start"],
+      ["periodEnd", "Period end (exclusive)"],
+      ["paymentStatus", "Payment"],
+    ],
+  },
+  facilities: {
+    title: "Facilities",
+    domain: "production",
+    columns: [
+      ["code", "Facility"],
+      ["name", "Name"],
+      ["type", "Type"],
+      ["dmaId", "DMA"],
+      ["capacityM3Day", "Capacity m³/day"],
+    ],
+  },
+  production: {
+    title: "Production readings",
+    domain: "production",
+    columns: [
+      ["sourceRecordId", "Observation"],
+      ["facilityId", "Facility"],
+      ["dmaId", "DMA"],
+      ["volumeM3", "Volume m³"],
+      ["flowLs", "Flow L/s"],
+      ["pressureBar", "Pressure bar"],
+      ["isSystemInput", "Boundary input"],
+      ["occurredAt", "Observed (PHT)"],
+    ],
+  },
+  "sampling-points": {
+    title: "Sampling points",
+    domain: "quality",
+    columns: [
+      ["code", "Point"],
+      ["name", "Name"],
+      ["dmaId", "DMA"],
+    ],
+  },
+  complaints: {
+    title: "Customer complaints",
+    domain: "customer",
+    columns: [
+      ["reference", "Case"],
+      ["category", "Category"],
+      ["dmaId", "DMA"],
+      ["status", "Status"],
+      ["reportedAt", "Reported (PHT)"],
+      ["resolvedAt", "Resolved (PHT)"],
+    ],
+    status: ["OPEN", "ASSIGNED", "RESOLVED", "CLOSED"],
+  },
+  pipelines: {
+    title: "Pipeline assets",
+    domain: "assets",
+    columns: [
+      ["code", "Asset"],
+      ["dmaId", "DMA"],
+      ["material", "Material"],
+      ["diameterMm", "Diameter mm"],
+      ["lengthM", "Length m"],
+      ["installedAt", "Installed (PHT)"],
+    ],
+  },
+};
