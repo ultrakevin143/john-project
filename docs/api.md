@@ -10,6 +10,8 @@ For masked customer accounts, `search` accepts exactly the four visible trailing
 
 `operations:read` is required for operations and overview. Each dataset additionally requires its `domain:<name>` permission. Global integration, quality, governance and audit routes require their named permissions. Writes check their separate write permission. Report access requires `reports:read`; NRW additionally requires `reports:nrw`; lab reports require `domain:quality`. A caller cannot bypass authorization using an ID, DMA, source or query filter from another district.
 
+The server also limits the shared roles: integration operators cannot open governance, audit or reports; stewards cannot open integrations or reports; and district analysts cannot open integrations, data quality, governance or audit. Domain-specific billing, plant, lab and field permissions remain controlled by their database grants. These limits apply to existing accounts without rewriting database records.
+
 Overview is also permission-scoped: unavailable `quality`, `nrw`, `activeLeaks`, `openComplaints` and `dq` summaries are null, attention/work-order/source arrays omit inaccessible records, and DMA objects omit balance fields unless the reader has `reports:nrw`. Cache keys include the current permission set as well as organization/period/generation. The frontend hides unavailable sections and prevents links to unauthorized balance drill-downs; server checks remain authoritative.
 
 ## Endpoints

@@ -1,25 +1,54 @@
 import assert from "node:assert/strict";
+import { effectivePermissions } from "../../src/shared/role-access.js";
+
+test("role page limits retain domain grants and never add access", () => {
+  const grants = [
+    "operations:read",
+    "integrations:read",
+    "dq:read",
+    "governance:read",
+    "reports:read",
+    "domain:quality",
+  ];
+  assert.equal(
+    effectivePermissions("operator", grants).includes("governance:read"),
+    false,
+  );
+  assert.equal(
+    effectivePermissions("steward", grants).includes("integrations:read"),
+    false,
+  );
+  assert.equal(
+    effectivePermissions("analyst", grants).includes("dq:read"),
+    false,
+  );
+  assert.equal(
+    effectivePermissions("lab", grants).includes("domain:quality"),
+    true,
+  );
+  assert.deepEqual(effectivePermissions("admin", []), []);
+});
 import test from "node:test";
-import { dateTime,pesos } from "../../../frontend/src/shared/lib/utils.js";
+import { dateTime, pesos } from "../../../frontend/src/shared/lib/utils.js";
 import { getConfig } from "../../src/config/env.js";
 import { openapi } from "../../src/docs/openapi.js";
 import { canTransition } from "../../src/modules/canonical/canonical.policy.js";
 import { schemas } from "../../src/modules/canonical/canonical.schemas.js";
 import { score } from "../../src/modules/quality/quality.engine.js";
 import {
-tariffScheduleSchema,
-validDemoLocation,
+  tariffScheduleSchema,
+  validDemoLocation,
 } from "../../src/modules/reference/reference.schemas.js";
 import { demonstrationTariffs } from "../../src/modules/reference/reference.data.js";
 import { tariffAmount } from "../../src/modules/reference/tariff.service.js";
 import {
-defaultPeriod,
-reportingPeriod,
+  defaultPeriod,
+  reportingPeriod,
 } from "../../src/modules/reports/reports.service.js";
 import { csv } from "../../src/shared/csv.js";
 import { manilaDate } from "../../src/shared/dates.js";
 import { stableHash } from "../../src/shared/hash.js";
-import { hashPassword,verifyPassword } from "../../src/shared/security.js";
+import { hashPassword, verifyPassword } from "../../src/shared/security.js";
 
 test("password hashes verify without storing plaintext", async () => {
   const hash = await hashPassword("local-synthetic-password");

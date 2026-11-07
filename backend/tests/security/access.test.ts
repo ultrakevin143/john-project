@@ -1,11 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
-import test,{ after,before } from "node:test";
+import test, { after, before } from "node:test";
 import request from "supertest";
-import { organizationId,seed,seedId } from "../../prisma/seed.js";
+import { organizationId, seed, seedId } from "../../prisma/seed.js";
 import { createApp } from "../../src/app.js";
-import { getConfig,isLoopback } from "../../src/config/env.js";
+import { getConfig, isLoopback } from "../../src/config/env.js";
 import { tokenHash } from "../../src/shared/security.js";
 
 const database = new URL(process.env.DATABASE_URL!);
@@ -66,7 +66,6 @@ const entities: Record<string, string> = {
   leaks: "field",
   complaints: "customer",
 };
-const core = ["admin", "operator", "steward", "analyst"];
 const entityIds: Record<string, string> = {};
 let foreign: {
   org: string;
@@ -350,23 +349,28 @@ test("eight roles enforce independent governance, quality, audit and export gate
         "/integrations/sources",
         "/integrations/runs",
         "/integrations/errors",
-        "/dq/rules",
-        "/dq/runs",
-        "/dq/scorecards",
-        "/governance/domains",
-        "/governance/assets",
       ])
-        await agents[role]!.get(route).expect(core.includes(role) ? 200 : 403);
+        await agents[role]!.get(route).expect(
+          ["admin", "operator"].includes(role) ? 200 : 403,
+        );
+      for (const route of ["/dq/rules", "/dq/runs", "/dq/scorecards"])
+        await agents[role]!.get(route).expect(
+          ["admin", "operator", "steward"].includes(role) ? 200 : 403,
+        );
+      for (const route of ["/governance/domains", "/governance/assets"])
+        await agents[role]!.get(route).expect(
+          ["admin", "steward"].includes(role) ? 200 : 403,
+        );
       await agents[role]!.get("/audit-events").expect(
         ["admin", "steward"].includes(role) ? 200 : 403,
       );
       for (const format of ["json", "csv"]) {
         await agents[role]!.get(`/reports/nrw?format=${format}`).expect(
-          [...core, "billing"].includes(role) ? 200 : 403,
+          ["admin", "analyst", "billing"].includes(role) ? 200 : 403,
         );
         await agents[role]!.get(
           `/reports/water-quality?format=${format}`,
-        ).expect([...core, "lab"].includes(role) ? 200 : 403);
+        ).expect(["admin", "analyst", "lab"].includes(role) ? 200 : 403);
       }
     });
 });
@@ -381,13 +385,13 @@ test("forged role headers and body fields cannot unlock write operations", async
     {
       method: "post",
       path: "/integrations/imports",
-      allowed: ["admin", "operator", "steward"],
+      allowed: ["admin", "operator"],
       body: {},
     },
     {
       method: "post",
       path: "/integrations/runs/not-a-uuid/retry",
-      allowed: ["admin", "operator", "steward"],
+      allowed: ["admin", "operator"],
       body: {},
     },
     {
@@ -445,7 +449,7 @@ test("overview never bypasses domain permissions or water-balance report access,
       const d = (await agents[role]!.get("/overview").expect(200)).body.data;
       const canQuality = domains[role].includes("quality"),
         canField = domains[role].includes("field"),
-        canBalance = [...core, "billing"].includes(role);
+        canBalance = ["admin", "analyst", "billing"].includes(role);
       assert.equal(
         d.quality !== null,
         canQuality,
@@ -463,7 +467,7 @@ test("overview never bypasses domain permissions or water-balance report access,
       );
       assert.equal(
         d.dq !== null,
-        core.includes(role),
+        ["admin", "operator", "steward"].includes(role),
         "Quality-run metadata requires dq:read",
       );
       assert.ok(
@@ -488,7 +492,8 @@ test("overview never bypasses domain permissions or water-balance report access,
               false,
               "DMA diagram must not smuggle restricted balance values",
             );
-      if (!core.includes(role)) assert.deepEqual(d.sources, []);
+      if (!["admin", "operator"].includes(role))
+        assert.deepEqual(d.sources, []);
     });
   const admin = (await agents.admin!.get("/overview").expect(200)).body.data;
   assert.ok(

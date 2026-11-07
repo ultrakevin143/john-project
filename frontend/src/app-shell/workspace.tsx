@@ -79,10 +79,14 @@ export function SessionWorkspace() {
     );
   const can = (p: string) => user.permissions.includes(p),
     nav = [
-      { href: "/overview", name: "Overview", show: true },
+      { href: "/overview", name: "Overview", show: can("operations:read") },
       { href: "/network", name: "Water balance", show: can("reports:nrw") },
-      { href: "/operations", name: "Operations", show: true },
-      { href: "/reference", name: "Reference setup", show: true },
+      { href: "/operations", name: "Operations", show: can("operations:read") },
+      {
+        href: "/reference",
+        name: "Reference setup",
+        show: can("operations:read"),
+      },
       {
         href: "/integrations",
         name: "Integrations",
@@ -113,10 +117,11 @@ export function SessionWorkspace() {
     </>
   );
   let content: React.ReactNode;
-  if (path === "/" || path === "/overview")
+  if ((path === "/" || path === "/overview") && can("operations:read"))
     content = <OverviewView user={user} />;
   else if (path === "/network" && can("reports:nrw")) content = <NetworkView />;
-  else if (path === "/reference") content = <ReferenceView user={user} />;
+  else if (path === "/reference" && can("operations:read"))
+    content = <ReferenceView user={user} />;
   else if (path === "/users" && user.roleCode === "admin")
     content = <UsersView user={user} />;
   else if (
@@ -125,7 +130,10 @@ export function SessionWorkspace() {
     can("reports:read")
   )
     content = <ReliabilityView />;
-  else if (path.startsWith("/operations"))
+  else if (
+    (path === "/operations" || path.startsWith("/operations/")) &&
+    can("operations:read")
+  )
     content = (
       <OperationsView
         key={`${path}:${recordId ?? ""}`}

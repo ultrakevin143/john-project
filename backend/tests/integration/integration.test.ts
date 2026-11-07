@@ -50,6 +50,7 @@ after(async () => {
 });
 const admin = agents.admin!,
   operator = agents.operator!,
+  steward = agents.steward!,
   analyst = agents.analyst!,
   lab = agents.lab!,
   field = agents.field!,
@@ -68,6 +69,12 @@ test("health, readiness, API contract and error responses", async () => {
   await admin.get("/operations/meters?status=COMPLETED").expect(422);
 });
 test("domain roles, restricted identities and least-privilege writes", async () => {
+  await operator.get("/integrations/sources").expect(200);
+  await operator.get("/governance/assets").expect(403);
+  await steward.get("/integrations/sources").expect(403);
+  await steward.get("/governance/assets").expect(200);
+  await analyst.get("/dq/rules").expect(403);
+  await analyst.get("/governance/assets").expect(403);
   await plant.get("/operations/billing").expect(403);
   await plant.get("/operations/accounts").expect(403);
   await plant.get("/operations/production").expect(200);
