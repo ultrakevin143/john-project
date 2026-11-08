@@ -1,26 +1,27 @@
 "use client";
 
 import { type Asset } from "@/features/governance/types";
+import { RetentionPreview } from "@/features/governance/retention-preview";
 import { api } from "@/shared/api/client";
-import { type Envelope,type Page,type User } from "@/shared/api/contracts";
-import { Pager,Refresh,SearchBox,State } from "@/shared/data-display/index";
+import { type Envelope, type Page, type User } from "@/shared/api/contracts";
+import { Pager, Refresh, SearchBox, State } from "@/shared/data-display/index";
 import { RecordDetails } from "@/shared/data-display/record-details";
 import { type Row } from "@/shared/types";
 import {
-Alert,
-Button,
-Card,
-CardHeader,
-Dialog,
-Empty,
-Input,
-Label,
-Select,
-Status,
-Table,
-Textarea,
+  Alert,
+  Button,
+  Card,
+  CardHeader,
+  Dialog,
+  Empty,
+  Input,
+  Label,
+  Select,
+  Status,
+  Table,
+  Textarea,
 } from "@/shared/ui/index";
-import { ArrowRight,Pencil } from "lucide-react";
+import { ArrowRight, Pencil } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import useSWR from "swr";
@@ -160,6 +161,7 @@ export function PolicyEditor({
           </Button>
         </div>
       </form>
+      <RetentionPreview assetId={asset.id} />
     </Dialog>
   );
 }

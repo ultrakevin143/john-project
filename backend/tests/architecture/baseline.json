@@ -6,6 +6,7 @@
     "GET /:entity",
     "GET /:entity/:id",
     "GET /assets",
+    "GET /assets/:id/retention-preview",
     "GET /docs",
     "GET /domains",
     "GET /errors",
@@ -57,12 +58,13 @@
     "USE /users"
   ],
   "css": "5a5331131eef8dfbde3a8eb79b06bb30379ee547aef1ccaf723ee3bb0c075ed9",
-  "schema": "b9c64fb2f6ed668d721dc4e6592d58791e8656842ff7afc50e20fc72a42b3f13",
+  "schema": "bc097447c27ec62d367516f2bd310c0dbd9276cc3b72b1c6ab64c7596cde8084",
   "migrations": {
     "202610260001_water_foundation": "ab844bc08a0ca01f56a5ca78646466b369caa2e04154b73c6112b36901802a0b",
     "202610260002_governed_integrity": "949dc09daade2b7e2b6fb000c5059a32ea6a8b2438d07b14a4bc7ebbd9d0bb3d",
     "202610270001_cebu_configuration": "05d5f77701a8224f6572bf9ab839eb4bb46c0d66a8fec306044f3ed6cbec8622",
     "202610270002_password_recovery": "ea3082ab4a19f110482f1dbe7bd28e58ad7e147a26f92906ab4e2945003bd585",
-    "202610270003_security_question": "2e92af4e44e1731738a3948f281d5eb53d4b060ebbc623e89480c64b6e0d1032"
+    "202610270003_security_question": "2e92af4e44e1731738a3948f281d5eb53d4b060ebbc623e89480c64b6e0d1032",
+    "202611080001_import_payload_revisions": "f1c6ba20970d056a725a9b7e45ab432f84866ebbb2b76e4af4fcc892719bf18e"
   }
 }

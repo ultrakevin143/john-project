@@ -250,6 +250,17 @@ export function createOperationsService(db: PrismaClient, config: Config) {
         }),
         repo.count({ where }),
       ]);
+    if (["accounts", "billing", "complaints"].includes(entity) && rows.length) {
+      await audit(db, {
+        ...serviceAudit(requestContext.audit),
+        action: "CLASSIFIED_READ",
+        entity,
+        metadata: {
+          count: rows.length,
+          identitiesMasked: identitiesMasked(user, config),
+        },
+      });
+    }
     return pageResponse(
       rows.map((r) => masked(r, entity, user, config)),
       total,
@@ -270,6 +281,18 @@ export function createOperationsService(db: PrismaClient, config: Config) {
     });
     if (!row)
       throw new ApiError(404, "NOT_FOUND", "Operational record not found.");
+    if (["accounts", "billing", "complaints"].includes(entity)) {
+      await audit(db, {
+        ...serviceAudit(requestContext.audit),
+        action: "CLASSIFIED_READ",
+        entity,
+        entityId: id,
+        metadata: {
+          count: 1,
+          identitiesMasked: identitiesMasked(user, config),
+        },
+      });
+    }
     const source = await db.sourceSystem.findFirst({
       where: { id: row.sourceSystemId, organizationId: user.organizationId },
       select: { id: true, name: true, method: true, domain: true },

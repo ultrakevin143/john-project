@@ -48,6 +48,84 @@ before(async () => {
 after(async () => {
   await db.$disconnect();
 });
+test("retention preview is scoped, audited, non-destructive and permission checked", async () => {
+  const asset = await db.dataAsset.findFirstOrThrow({
+    where: { organizationId: organizationId },
+  });
+  const run = await db.integrationRun.create({
+    data: {
+      organizationId: organizationId,
+      sourceSystemId: asset.sourceSystemId,
+      entity: asset.entity,
+      method: "test",
+      initiatedBy: "test",
+      idempotencyKey: randomUUID(),
+      payloadHash: randomUUID(),
+    },
+  });
+  const record = await db.rawImportRecord.create({
+    data: {
+      organizationId: organizationId,
+      runId: run.id,
+      rowNumber: 1,
+      payload: { example: "not returned" },
+      payloadHash: randomUUID(),
+      status: "LOADED",
+      createdAt: new Date("2000-01-01T00:00:00Z"),
+    },
+  });
+  const path = `/governance/assets/${asset.id}/retention-preview`;
+  const unrelatedRun = await db.integrationRun.create({
+    data: {
+      organizationId: asset.organizationId,
+      sourceSystemId: asset.sourceSystemId,
+      entity: "another-entity",
+      method: "test",
+      initiatedBy: "test",
+      idempotencyKey: randomUUID(),
+      payloadHash: randomUUID(),
+    },
+  });
+  const unrelated = await db.rawImportRecord.create({
+    data: {
+      organizationId: asset.organizationId,
+      runId: unrelatedRun.id,
+      rowNumber: 1,
+      payload: {},
+      payloadHash: randomUUID(),
+      status: "LOADED",
+      createdAt: new Date("2000-01-01T00:00:00Z"),
+    },
+  });
+  await analyst.get(path).expect(403);
+  const response = (await admin.get(path).expect(200)).body.data;
+  assert.ok(
+    response.records.some((entry: { id: string }) => entry.id === record.id),
+  );
+  assert.equal(
+    response.records.some((entry: { id: string }) => entry.id === unrelated.id),
+    false,
+  );
+  assert.equal(
+    "payload" in
+      response.records.find((entry: { id: string }) => entry.id === record.id),
+    false,
+  );
+  assert.ok(await db.rawImportRecord.findUnique({ where: { id: record.id } }));
+  assert.ok(
+    await db.auditEvent.findFirst({
+      where: {
+        organizationId: organizationId,
+        action: "RETENTION_PREVIEW",
+        entityId: asset.id,
+      },
+    }),
+  );
+  await db.rawImportRecord.delete({ where: { id: record.id } });
+  await db.integrationRun.delete({ where: { id: run.id } });
+  await db.rawImportRecord.delete({ where: { id: unrelated.id } });
+  await db.integrationRun.delete({ where: { id: unrelatedRun.id } });
+});
 const admin = agents.admin!,
   operator = agents.operator!,
   steward = agents.steward!,
@@ -87,6 +165,29 @@ test("domain roles, restricted identities and least-privilege writes", async () 
   await analyst.post("/dq/runs").send({}).expect(403);
   await analyst.post("/integrations/imports").send({}).expect(403);
   await analyst.get("/audit-events").expect(403);
+});
+test("classified account reads create audit evidence without exposing customer data", async () => {
+  const response = await admin.get("/operations/accounts").expect(200);
+  assert.ok(response.body.data.length > 0);
+  const first = response.body.data[0];
+  await admin.get(`/operations/accounts/${first.id}`).expect(200);
+  const event = await db.auditEvent.findFirstOrThrow({
+    where: {
+      organizationId,
+      action: "CLASSIFIED_READ",
+      entity: "accounts",
+      entityId: first.id,
+    },
+  });
+  assert.equal(
+    JSON.stringify(event.metadata).includes(String(first.accountNumber)),
+    false,
+  );
+  assert.equal(
+    JSON.stringify(event.metadata).includes(String(first.customerName)),
+    false,
+  );
+  await plant.get(`/operations/accounts/${first.id}`).expect(403);
 });
 test("CSV quarantine, replay protection and selected corrected retry", async () => {
   const now = new Date().toISOString(),
@@ -137,6 +238,17 @@ test("CSV quarantine, replay protection and selected corrected retry", async () 
       .get(`/integrations/runs/${first.body.data.id}`)
       .expect(200),
     error = detail.body.data.errors[0];
+  const importRead = await db.auditEvent.findFirstOrThrow({
+    where: {
+      organizationId,
+      action: "CLASSIFIED_READ",
+      entity: "import-run",
+      entityId: first.body.data.id,
+    },
+  });
+  assert.deepEqual(importRead.metadata, {
+    count: detail.body.data.errors.length,
+  });
   const retry = await operator
     .post(`/integrations/runs/${first.body.data.id}/retry`)
     .send({

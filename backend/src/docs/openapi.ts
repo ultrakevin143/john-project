@@ -95,6 +95,7 @@ export function openapi() {
     "/insights/meter-reliability",
     "/governance/domains",
     "/governance/assets",
+    "/governance/assets/{id}/retention-preview",
     "/audit-events",
     "/reports/operations",
     "/reports/nrw",

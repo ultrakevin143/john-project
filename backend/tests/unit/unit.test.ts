@@ -27,6 +27,10 @@ test("role page limits retain domain grants and never add access", () => {
     true,
   );
   assert.deepEqual(effectivePermissions("admin", []), []);
+  assert.deepEqual(
+    effectivePermissions("unknown-role", ["operations:read"]),
+    [],
+  );
 });
 import test from "node:test";
 import { dateTime, pesos } from "../../../frontend/src/shared/lib/utils.js";
