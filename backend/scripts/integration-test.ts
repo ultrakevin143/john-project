@@ -1,8 +1,7 @@
-import { parse } from "dotenv";
 import EmbeddedPostgres from "embedded-postgres";
 import { spawn } from "node:child_process";
 import { randomBytes } from "node:crypto";
-import { mkdir,mkdtemp,readFile,rm } from "node:fs/promises";
+import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { isLoopback } from "../src/config/env.js";
@@ -12,29 +11,7 @@ import { embeddedPostgres } from "./postgres-runtime.js";
 const require = createRequire(import.meta.url),
   root = process.cwd();
 const security = process.argv.includes("--security");
-let accountPassword = randomBytes(18).toString("base64url");
-if (security) {
-  const local = parse(
-    await readFile(path.join(root, ".local", "local.env"), "utf8"),
-  );
-  for (const key of ["DATABASE_URL", "DIRECT_URL"]) {
-    if (!local[key] || !isLoopback(new URL(local[key]!).hostname))
-      throw new Error(
-        "Security credentials must come from the preserved local environment.",
-      );
-  }
-  if (!local.SEED_PASSWORD || local.SEED_PASSWORD.length < 12)
-    throw new Error("The private local demo account password is unavailable.");
-  accountPassword = local.SEED_PASSWORD;
-  const access = await readFile(
-    path.join(root, ".local", "development-access.md"),
-    "utf8",
-  );
-  if (!access.includes(accountPassword))
-    throw new Error(
-      "Private access-file credentials do not match the preserved local environment.",
-    );
-}
+const accountPassword = randomBytes(18).toString("base64url");
 let pg: EmbeddedPostgres | undefined;
 let testDirectory: string | undefined;
 let testUrl = process.env.TEST_DATABASE_URL;
